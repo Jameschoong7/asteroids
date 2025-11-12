@@ -1,4 +1,5 @@
-import pygame,player
+import pygame
+import player as p
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from logger import log_state
 
@@ -6,7 +7,11 @@ from logger import log_state
 def main():
     pygame.init()
     clock = pygame.time.Clock()
-    player1 = player.Player(SCREEN_WIDTH/2,SCREEN_HEIGHT/2)
+    updatable= pygame.sprite.Group()
+    drawable =pygame.sprite.Group()
+    
+    p.Player.containers = (updatable,drawable)
+    
     dt = 0
     screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
     print(f"Starting Asteroids!")
@@ -19,10 +24,15 @@ def main():
             if event.type == pygame.QUIT:
                 return
         screen.fill("black")
-        player1.draw(screen)
-        player1.update(dt)
+       
+        updatable.update(dt)
+        
+        for player in drawable:
+            player.draw(screen)
+            
         pygame.display.flip()
         
+        # limit the framerate to 60 FPS
         dt = clock.tick(60) /1000
         
 
