@@ -11,7 +11,7 @@ def main():
     drawable =pygame.sprite.Group()
     
     p.Player.containers = (updatable,drawable)
-    
+    player1 = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     dt = 0
     screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
     print(f"Starting Asteroids!")
