@@ -8,6 +8,7 @@ class Player(circleshape.CircleShape):
         super().__init__(x,y,constants.PLAYER_RADIUS)
         self.rotation = 0
         self.shot_cooldown = 0
+        self.lives = constants.PLAYER_LIFE
 
     # in the Player class
     def triangle(self):

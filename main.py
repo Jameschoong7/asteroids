@@ -1,6 +1,7 @@
 import pygame
 import player as p
 import score
+import lives as l
 import asteroid as a
 import asteroidfield as af
 import shot as s
@@ -8,23 +9,35 @@ from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from logger import log_state,log_event
 import sys
 
+def reset_game():
+     global player1
+     player1.kill()
+    
+     player1 = p.Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+     
+
 def main():
+    global player1, asteroid1
     pygame.init()
     clock = pygame.time.Clock()
     updatable= pygame.sprite.Group()
     drawable =pygame.sprite.Group()
     asteroids = pygame.sprite.Group()
     shots = pygame.sprite.Group()
+    lives = pygame.sprite.Group()
     
     p.Player.containers = (updatable,drawable)
     a.Asteroid.containers = (asteroids,updatable,drawable)
     af.AsteroidField.containers = (updatable)
     s.Shot.containers = (shots,updatable,drawable)
     score.Score.containers = (drawable)
+    l.Lives.containers = (drawable)
     dt = 0
     player1 = p.Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     asteroid1 = af.AsteroidField()
     player_score = score.Score()
+    player_live = l.Lives()
+    
     screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
     print(f"Starting Asteroids!")
     print(f"Screen width: {SCREEN_WIDTH}")
@@ -49,9 +62,16 @@ def main():
 
         for asteroid in asteroids:
             if asteroid.collides_with(player1):
+                
                 log_event("player_hit")
-                print("Game over!")
-                sys.exit()
+                
+                if player_live.lives==0:
+                    print("Game over!")
+                    sys.exit()
+                else:
+                    player_live.update()
+                    reset_game()
+               
 
         for obj in drawable:
             obj.draw(screen)
